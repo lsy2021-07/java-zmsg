@@ -1,9 +1,16 @@
+//import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.methods.HttpPost;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -11,7 +18,9 @@ import java.util.Scanner;
 public class BaseProxy {
     String serviceUrl;
     URL url;
-    HttpPost conn;
+    HttpURLConnection __conn;
+    int __id_count;
+    String __auth_header;
     public BaseProxy(String network, String service_url, int service_port, String zcash_conf_file, String timeout) {
         if (network.equals("testnet")) {
             service_port = 18232;
@@ -43,27 +52,26 @@ public class BaseProxy {
                     conf.put("rpcport",conf.getOrDefault("rpcport",String.valueOf(service_port)));
                     conf.put("rpcconnect",conf.getOrDefault("rpcconnect","localhost"));
 
-
-
                     if (conf.get("rpcpassword")==null){
                         throw new IllegalArgumentException();
                     }
                     service_url = "http://" + conf.get("rpcuser") + ":" + conf.get("rpcpassword") + "@" + conf.get("rpcport") + ":" + conf.get("rpcport");
                     serviceUrl = service_url;
                     url = new URL(service_url);
-                    conn = new HttpPost("http://www.example.com");
 
-//         python   ??  if service_port is None: service_port = network
+                    __conn = (HttpURLConnection) new URL("http://www.example.com").openConnection();
 
-//                    conf.put();
+                    __id_count = 0;
+                    __auth_header = Base64.getEncoder().encodeToString(url.getUserInfo().getBytes(StandardCharsets.UTF_8));
 
 
-
-//                    System.out.println(data);
+//                    connection.setRequestProperty("Authorization", "Basic "+encoded);
                 }
                 fd.close();
-            } catch (FileNotFoundException e) {
+            } catch (FileNotFoundException | MalformedURLException e) {
 
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }
@@ -71,7 +79,23 @@ public class BaseProxy {
 
     }
 
-//    public _call(String service_name, )
+//    public _call(String service_name){
+//        JSONObject postdata = new JSONObject();
+//        postdata.put("version","1.1");
+//        postdata.put("method",service_name);
+//        postdata.put("method",__id_count);
+//
+//        __conn.setRequestMethod("POST");
+//        __conn.setRequestProperty("Host", url.getHost());
+//        __conn.setRequestProperty("User-Agent", "AuthServiceProxy/0.1");
+//        __conn.setRequestProperty("Authorization", "Basic "+ __auth_header);
+//        __conn.setRequestProperty("Content-type", "application/json");
+//
+//
+////        conn.set
+//
+//    }
+
 
 }
 
