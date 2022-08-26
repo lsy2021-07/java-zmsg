@@ -19,6 +19,9 @@ public class ZcashProxy {
 
     public void _con(String serviceIp) throws IOException {
         // 服务端口
+        if (!ipSet.contains(serviceIp)){
+            throw new IOException("{err_msg:\"ip地址错误\"}");
+        }
         int servicePort = 8232;
         URL url = new URL("http://test:Shunine8@" + serviceIp + ":" + servicePort + "/");
         this.con = (HttpURLConnection) url.openConnection(); //建立连接
@@ -63,61 +66,44 @@ public class ZcashProxy {
      * @param id：用户标识
      * @return result(JSONObject):服务器结果
      */
-    public JSONObject sendRequest(String serviceIp,String method, JSONArray paramArray, String id) {
+    public JSONObject _sendRequest(String serviceIp, String method, JSONArray paramArray, String id) throws IOException {
         JSONObject result = new JSONObject();
-        try {
-            /*建立发送头*/
-            _con(serviceIp);
+        JSONObject jsonInput = new JSONObject();
+        jsonInput.put("version", "1.1");
+        jsonInput.put("method", method);
+        jsonInput.put("params", paramArray);
+        jsonInput.put("id", id);
+        String jsonInputString = jsonInput.toJSONString();
+        /*写入参数到请求中*/
 
-            /*写入参数到请求中*/
-            JSONObject jsonInput = new JSONObject();
-            jsonInput.put("version", "1.1");
-            jsonInput.put("method", method);
-            jsonInput.put("params", paramArray);
-            jsonInput.put("id", id);
-            String jsonInputString = jsonInput.toJSONString();
-            /*写入参数到请求中*/
+        OutputStream out = this.con.getOutputStream();
+        out.write(jsonInputString.getBytes());
+        out.flush();
+        out.close();
 
-            OutputStream out = this.con.getOutputStream();
-            out.write(jsonInputString.getBytes());
-            out.flush();
-            out.close();
+        /*从连接中读取响应信息*/
 
-            /*从连接中读取响应信息*/
-            String msg = "";
-            int code = this.con.getResponseCode();
-            // 返回服务器对于HTTP请求的返回信息
-            if (code == 200) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(this.con.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    msg += line + "\n";
-                }
-                // 转换为json格式
-                JSONObject jsonResult = JSONObject.parseObject(msg);
-                if (jsonResult.get("result") == null) {
-                    result.put("status", "error");
-                    result.put("data", jsonResult.get("error"));
-                } else {
-                    result.put("status", "success");
-                    result.put("data", jsonResult.get("result"));
-                }
-                reader.close();
-            } else {
-                // TODO:HTTP连接错误处理
-                JSONObject jsonData = new JSONObject();
-                jsonData.put("message", "连接失败");
-                result.put("status", "error");
-                result.put("data", jsonData);
+        int code = this.con.getResponseCode();
+        // 返回服务器对于HTTP请求的返回信息
+        if (code == 200) {
+            StringBuilder response = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(this.con.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
             }
-            //  断开连接
-            this.con.disconnect();
-            // 处理结果
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            // 转换为json格式
+            JSONObject jsonResult = JSONObject.parseObject(response.toString());
+            if (jsonResult.get("result") == null) {
+                throw new IOException("{err_code:"+"000"+",err_msg:\"missing JSON-RPC result\"}" );
+            }
+            result.put("data", jsonResult.get("result"));
+            reader.close();
+        } else {
+            // TODO:HTTP连接错误处理
+            throw new IOException("{err_code:"+String.valueOf(code)+"," + "err_msg:\"missing HTTP response from server\"}");
         }
+
         /*从连接中读取响应信息*/
         return result;
     }
