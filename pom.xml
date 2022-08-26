@@ -35,11 +35,6 @@
         </dependency>
 
 
-        <!--        <dependency>-->
-        <!--            <groupId>org</groupId>-->
-        <!--            <artifactId>json</artifactId>-->
-        <!--            <version>20</version>-->
-        <!--        </dependency>-->
     </dependencies>
 
 </project>

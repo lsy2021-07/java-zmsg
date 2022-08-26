@@ -1,3 +1,4 @@
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.omg.CORBA.Object;
@@ -36,9 +37,9 @@ public class Send extends ZcashProxy{
      * @param idNumber：请求的id_number
      * @return HashMap
      */
-    public HashMap<String, Object> sendMessage(String ip, String senderAddress, String receiverAddress, String amount, String message, String idNumber) throws IOException {
+    public HashMap<String, Object> sendMessage(String ip, String senderAddress, String receiverAddress, String amount, String message, String idNumber) {
         HashMap mapResult = new HashMap<String,Object>();
-        try {
+        try{
             _con(ip);
             /*建立输入数据格式*/
             JSONObject params = new JSONObject();
@@ -54,24 +55,21 @@ public class Send extends ZcashProxy{
             paramArray.add(paramArray1);
             /*建立输入数据格式*/
 
-            JSONObject response = sendRequest(ip,"z_sendmany",paramArray,idNumber);
-            if(response.get("status") == "success"){
-                JSONObject jsonData = new JSONObject();
-                jsonData.put("operationid",response.get("data"));
-                mapResult.put("status","success");
-                mapResult.put("data",jsonData);
-            }else{
-                JSONObject jsonData = new JSONObject();
-                jsonData.put("error",response.get("data"));
-                mapResult.put("status","error");
-                mapResult.put("data",jsonData);
-            }
-        }   catch (IOException e) {
-            e.printStackTrace();
+            JSONObject response = _sendRequest(ip,"z_sendmany",paramArray,idNumber);
             JSONObject jsonData = new JSONObject();
-            jsonData.put("err_message", e.getMessage());
-            mapResult.put("status", "error");
-            mapResult.put("data", jsonData);
+            jsonData.put("opid",response.get("data"));
+            mapResult.put("status","ok");
+            mapResult.put("data",jsonData);
+
+
+        } catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        }
+        finally {
+            this.con.disconnect();
         }
 
         return mapResult;
