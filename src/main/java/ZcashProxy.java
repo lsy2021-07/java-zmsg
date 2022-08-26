@@ -70,8 +70,6 @@ public class ZcashProxy {
     public JSONObject sendRequest(String serviceIp,String method, JSONArray paramArray, String id) {
         JSONObject result = new JSONObject();
         try {
-            /*建立发送头*/
-            _con(serviceIp);
 
             /*写入参数到请求中*/
             JSONObject jsonInput = new JSONObject();
@@ -103,7 +101,7 @@ public class ZcashProxy {
                     result.put("status", "error");
                     result.put("data", jsonResult.get("error"));
                 } else {
-                    result.put("status", "success");
+                    result.put("status", "ok");
                     result.put("data", jsonResult.get("result"));
                 }
                 reader.close();
@@ -119,8 +117,12 @@ public class ZcashProxy {
             // 处理结果
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            result.put("status", "error");
+            result.put("data", e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
+            result.put("status", "error");
+            result.put("data", e.getMessage());
         }
         /*从连接中读取响应信息*/
         return result;
