@@ -68,12 +68,15 @@ public class ZcashProxy {
      */
     public JSONObject _sendRequest(String serviceIp, String method, JSONArray paramArray, String id) throws IOException {
         JSONObject result = new JSONObject();
+
+        /*请求参数*/
         JSONObject jsonInput = new JSONObject();
         jsonInput.put("version", "1.1");
         jsonInput.put("method", method);
         jsonInput.put("params", paramArray);
         jsonInput.put("id", id);
         String jsonInputString = jsonInput.toJSONString();
+        System.out.println(jsonInputString);
         /*写入参数到请求中*/
 
         OutputStream out = this.con.getOutputStream();

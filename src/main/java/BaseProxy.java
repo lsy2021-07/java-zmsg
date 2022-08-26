@@ -21,6 +21,7 @@ public class BaseProxy {
     HttpURLConnection __conn;
     int __id_count;
     String __auth_header;
+
     public BaseProxy(String network, String service_url, int service_port, String zcash_conf_file, String timeout) {
         if (network.equals("testnet")) {
             service_port = 18232;
