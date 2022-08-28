@@ -9,5 +9,8 @@
         <module name="java-zmsg" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="java-zmsg" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
