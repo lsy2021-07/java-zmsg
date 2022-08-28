@@ -75,4 +75,30 @@ public class Send extends ZcashProxy{
         return mapResult;
     }
 
+    public HashMap<String, Object> getBalance(String ip,String address,String id){
+        HashMap mapResult = new HashMap<String,Object>();
+        try {
+            _con(ip);
+            /*建立输入数据格式*/
+            JSONArray paramArray = new JSONArray();
+            paramArray.add(address);
+            /*建立输入数据格式*/
+
+            JSONObject response = _sendRequest(ip,"z_getbalance",paramArray,id);
+            JSONObject jsonData = new JSONObject();
+            jsonData.put("balance",response.get("data"));
+            mapResult.put("status","ok");
+            mapResult.put("data",jsonData);
+
+        } catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        } finally {
+            this.con.disconnect();
+        }
+        return mapResult;
+    }
+
 }
