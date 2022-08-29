@@ -1,17 +1,17 @@
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONArray;
-import org.omg.CORBA.Object;
+import com.alibaba.fastjson.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
 
 public class ZcashProxy {
     HttpURLConnection con;
@@ -76,7 +76,7 @@ public class ZcashProxy {
         jsonInput.put("params", paramArray);
         jsonInput.put("id", id);
         String jsonInputString = jsonInput.toJSONString();
-        System.out.println(jsonInputString);
+//        System.out.println(jsonInputString);
         /*写入参数到请求中*/
 
         OutputStream out = this.con.getOutputStream();
@@ -97,6 +97,54 @@ public class ZcashProxy {
             }
             // 转换为json格式
             JSONObject jsonResult = JSONObject.parseObject(response.toString());
+            if (jsonResult.get("result") == null) {
+                throw new IOException("{err_code:"+"000"+",err_msg:\"missing JSON-RPC result\"}" );
+            }
+            result.put("data", jsonResult.get("result"));
+            reader.close();
+        } else {
+            // TODO:HTTP连接错误处理
+            throw new IOException("{err_code:"+String.valueOf(code)+"," + "err_msg:\"missing HTTP response from server\"}");
+        }
+
+        /*从连接中读取响应信息*/
+        return result;
+    }
+
+
+    public JSONObject _sendRequest(String serviceIp, String method, JSONArray paramArray) throws IOException {
+        JSONObject result = new JSONObject();
+
+        /*请求参数*/
+        JSONObject jsonInput = new JSONObject();
+        jsonInput.put("version", "1.1");
+        jsonInput.put("method", method);
+        jsonInput.put("params", paramArray);
+        String jsonInputString = jsonInput.toJSONString();
+//        System.out.println(jsonInputString);
+        /*写入参数到请求中*/
+
+        OutputStream out = this.con.getOutputStream();
+        out.write(jsonInputString.getBytes());
+        out.flush();
+        out.close();
+
+        /*从连接中读取响应信息*/
+
+        int code = this.con.getResponseCode();
+        // 返回服务器对于HTTP请求的返回信息
+        if (code == 200) {
+            StringBuilder response = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(this.con.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            // 转换为json格式
+
+
+            JSONObject jsonResult = JSONObject.parseObject(response.toString());
+
             if (jsonResult.get("result") == null) {
                 throw new IOException("{err_code:"+"000"+",err_msg:\"missing JSON-RPC result\"}" );
             }
