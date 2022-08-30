@@ -1,6 +1,5 @@
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,31 +32,6 @@ public class ZcashProxy {
         this.con.setDoOutput(true);
     }
 
-//    public JSONObject _call(String method, JSONArray params) throws IOException {
-//        JSONObject jsonInput = new JSONObject();
-//        jsonInput.put("version", "1.1");
-//        jsonInput.put("method", method);
-//        jsonInput.put("params", params);
-//
-//        String jsonInputString = jsonInput.toJSONString();
-//
-//        OutputStream outputStream = this.con.getOutputStream();
-//        outputStream.write(jsonInputString.getBytes());
-//        outputStream.flush();
-//        outputStream.close();
-//        //return this.con.getResponseCode();
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(this.con.getInputStream()));
-//        StringBuilder msg = new StringBuilder();
-//        String line;
-//        while ((line = reader.readLine()) != null) {
-//            msg.append(line);
-//        }
-//        // 转换为json格式
-//        reader.close();
-//        String response = msg.toString();
-//        return JSON.parseObject(response).getJSONObject("result");
-//    }
-
     /**
      * 向服务器发起请求，接受返回信息
      * @param serviceIp：服务器Ip
@@ -85,7 +59,6 @@ public class ZcashProxy {
         out.close();
 
         /*从连接中读取响应信息*/
-
         int code = this.con.getResponseCode();
         // 返回服务器对于HTTP请求的返回信息
         if (code == 200) {
@@ -122,8 +95,8 @@ public class ZcashProxy {
         jsonInput.put("params", paramArray);
         String jsonInputString = jsonInput.toJSONString();
 //        System.out.println(jsonInputString);
-        /*写入参数到请求中*/
 
+        /*写入参数到请求中*/
         OutputStream out = this.con.getOutputStream();
         out.write(jsonInputString.getBytes());
         out.flush();
@@ -158,36 +131,5 @@ public class ZcashProxy {
         /*从连接中读取响应信息*/
         return result;
     }
-
-//    public HashMap<String, String> GetInfo(String ip, String receiverAddress) {
-//        HashMap mapResult = new HashMap<String, Object>();
-//        try {
-//            /*建立连接*/
-//            _con(ip);
-//            /*建立连接*/
-//
-//            /*建立数据格式*/
-//            JSONArray params = new JSONArray();
-//            //TODO 自定义参数
-//            /*建立数据格式*/
-//
-//            /*发送并得到响应*/
-//            JSONObject response = _call("getinfo", params);
-//            /*发送并得到响应*/
-//
-//            mapResult.put("status", "ok");
-//            mapResult.put("data", response);
-//
-//            /*处理数据*/
-//            //TODO
-//            /*处理数据*/
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            mapResult.put("status", "error");
-//            mapResult.put("data", e.getMessage());
-//        }
-//
-//        return mapResult;
-//    }
 
 }
