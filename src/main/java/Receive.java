@@ -50,6 +50,10 @@ public class Receive extends ZcashProxy{
         return  simpleDateFormat.format(new Date(new Long(time)));
     }
 
+    public HashMap<String, Object> checkMessage(String ip, String address) {
+        return checkMessage(ip, address, 0.0);
+    }
+
     public HashMap<String, Object> checkMessage(String ip, String address, Double amount) {
         HashMap mapResult = new HashMap<String,Object>();
         try{
