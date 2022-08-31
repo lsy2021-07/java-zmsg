@@ -3,7 +3,6 @@ package zcash;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-//import org.omg.CORBA.Object;
 
 import java.io.IOException;
 
