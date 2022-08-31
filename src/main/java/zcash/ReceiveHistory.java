@@ -1,6 +1,6 @@
+package zcash;
 
-
-public class ReceiveHistory extends ZcashProxy{
+public class ReceiveHistory extends ZcashProxy {
     public ReceiveHistory(){
         super();
     }

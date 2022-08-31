@@ -1,4 +1,7 @@
+package Test;
+
 import org.junit.Test;
+import zcash.Send;
 
 import java.util.HashMap;
 

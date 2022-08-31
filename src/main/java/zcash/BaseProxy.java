@@ -1,6 +1,4 @@
-//import org.apache.commons.codec.binary.Base64;
-import org.apache.http.client.methods.HttpPost;
-import org.json.JSONObject;
+package zcash;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,7 +6,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;

@@ -1,12 +1,13 @@
+package zcash;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.omg.CORBA.Object;
 
 import java.io.IOException;
 import java.util.HashMap;
 
-public class AddressManage extends ZcashProxy{
+public class AddressManage extends ZcashProxy {
     public AddressManage(){
         super();
     }
