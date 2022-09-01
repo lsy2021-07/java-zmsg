@@ -1,5 +1,7 @@
 import org.junit.Test;
 
+import java.util.HashMap;
+
 import static org.junit.Assert.*;
 
 public class AddressManageTest {
@@ -9,7 +11,8 @@ public class AddressManageTest {
     @Test
     public void generateAddress() {
         String id = "AddressManageTest";
-        Integer accountNumber = 6;
-        System.out.println(addressManage.generateAddress(serviceIp,id,accountNumber));
+        Integer accountNumber = 13;
+        HashMap result = addressManage.generateAddress(serviceIp, id,accountNumber);
+        System.out.println(result);
     }
 }
