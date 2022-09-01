@@ -1,4 +1,7 @@
+package Test;
+
 import org.junit.Test;
+import zcash.AddressManage;
 
 import java.util.HashMap;
 

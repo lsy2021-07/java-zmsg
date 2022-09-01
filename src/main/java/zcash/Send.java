@@ -1,3 +1,5 @@
+package zcash;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -11,7 +13,7 @@ import java.lang.Object;
 
 import static java.lang.Thread.sleep;
 
-public class Send extends ZcashProxy{
+public class Send extends ZcashProxy {
     public Send(){
         super();
     }

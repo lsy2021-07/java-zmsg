@@ -1,3 +1,5 @@
+package zcash;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -7,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AddressManage extends ZcashProxy{
+public class AddressManage extends ZcashProxy {
     public AddressManage(){
         super();
     }
