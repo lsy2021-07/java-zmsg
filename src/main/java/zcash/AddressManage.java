@@ -39,10 +39,9 @@ public class AddressManage extends ZcashProxy {
                 paramArray_address.add(account);
 
                 List<String> addressType = new ArrayList<String>();
+                // 设置成sapling地址
                 addressType.add("sapling");
-//                paramArray_address.add("\'"+paramArray_address+"\'");
                 paramArray_address.add(addressType);
-                System.out.println(addressType);
 
                 _con(ip);
                 JSONObject response_address = _sendRequest(ip, "z_getaddressforaccount",paramArray_address,id);
@@ -63,7 +62,6 @@ public class AddressManage extends ZcashProxy {
                 List<String> addressType = new ArrayList<String>();
                 addressType.add("sapling");
                 paramArray_address.add(addressType);
-                System.out.println(addressType);
 
                 /*建立在新建账户下获取新地址输入数据格式*/
 
