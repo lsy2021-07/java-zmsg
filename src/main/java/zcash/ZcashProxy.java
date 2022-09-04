@@ -1,5 +1,6 @@
 package zcash;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import java.io.BufferedReader;
@@ -9,10 +10,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 public class ZcashProxy {
     HttpURLConnection con;
@@ -117,7 +115,6 @@ public class ZcashProxy {
             }
             // 转换为json格式
 
-
             JSONObject jsonResult = JSONObject.parseObject(response.toString());
 
             if (jsonResult.get("result") == null) {
@@ -132,6 +129,41 @@ public class ZcashProxy {
 
         /*从连接中读取响应信息*/
         return result;
+    }
+
+    public static void main(String[] args) {
+        String serviceIp = "8.219.9.193";
+        ZcashProxy zcashProxy = new ZcashProxy();
+        HashMap result = zcashProxy._opidTotxid(serviceIp, "opid-a075e2c2-c66c-4746-b7fc-4c2f79dcbf0e");
+        System.out.println(result);
+//        zcashProxy._opidTotxid(serviceIp, "opid-605e9f90-766d-4511-a24e-dda7ee507665");
+    }
+
+    public HashMap<String, Object> _opidTotxid(String ip, String opid) {
+        HashMap mapResult = new HashMap<String,Object>();
+        try{
+            _con(ip);
+            /*建立输入数据格式*/
+            JSONArray paramArray = new JSONArray();
+            List<String> list=new ArrayList<>();
+            list.add(opid);
+            paramArray.add(list);
+            JSONObject response = _sendRequest(ip,"z_getoperationstatus",paramArray);
+            JSONObject jsonData = JSON.parseObject(String.valueOf(response.getJSONArray("data").getJSONObject(0)));
+            String txid = (String) JSON.parseObject(String.valueOf(jsonData.get("result"))).get("txid");
+            mapResult.put("status","ok");
+            mapResult.put("data",txid);
+        } catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        }
+        finally {
+            this.con.disconnect();
+        }
+        System.out.println(mapResult);
+        return mapResult;
     }
 
 }

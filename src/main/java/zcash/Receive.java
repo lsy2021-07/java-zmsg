@@ -3,12 +3,15 @@ package zcash;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
 
 import java.io.IOException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class Receive extends ZcashProxy{
 
@@ -69,6 +72,55 @@ public class Receive extends ZcashProxy{
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 jsonObject.put("memo",hex_decode(String.valueOf(jsonObject.get("memo"))));
                 String time = String.valueOf (((JSONObject) new GetTransaction().getTransaction(ip, String.valueOf(jsonObject.get("txid"))).get("data")).get("time"));
+                jsonObject.put("time",unixtimeToData(time));
+            }
+            mapResult.put("status","ok");
+            mapResult.put("data",jsonArray);
+        } catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        }
+        finally {
+            this.con.disconnect();
+        }
+        return mapResult;
+    }
+
+    public HashMap<String, Object> GetReceiveHistory(String ip, String address) {
+        return GetReceiveHistory(ip, address, 0.0);
+    }
+    public HashMap<String, Object> GetReceiveHistory(String ip, String address,Double amount){
+        HashMap mapResult = new HashMap<String,Object>();
+        try{
+            _con(ip);
+            /*建立输入数据格式*/
+            JSONArray paramArray = new JSONArray();
+            paramArray.add(address);
+            paramArray.add(amount);
+            /*建立输入数据格式*/
+
+            JSONObject response = _sendRequest(ip,"z_listreceivedbyaddress",paramArray);
+
+            JSONArray jsonArray = JSONArray.parseArray(String.valueOf(response.get("data")) );
+
+            for (int i=0; i < jsonArray.size(); i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String time = String.valueOf(jsonObject.get("blocktime"));
+//                System.out.println(jsonObject);
+                jsonObject.put("memo",hex_decode(String.valueOf(jsonObject.get("memo"))));
+                JSONArray jsonArray1 = JSON.parseObject(String.valueOf(new GetTransaction().getZtransaction(ip, String.valueOf(jsonObject.get("txid"))).get("data"))).getJSONArray("outputs");
+
+                if (!address.equals(jsonArray1.getJSONObject(0).get("address"))){
+                    jsonObject.put("sender",jsonArray1.getJSONObject(0).get("address"));
+                }
+                else if (jsonArray1.size() > 1 && !address.equals(jsonArray1.getJSONObject(1).get("address"))){
+                    jsonObject.put("sender",jsonArray1.getJSONObject(1).get("address"));
+                }
+                else{
+                    jsonObject.put("sender","");
+                }
                 jsonObject.put("time",unixtimeToData(time));
             }
             mapResult.put("status","ok");
