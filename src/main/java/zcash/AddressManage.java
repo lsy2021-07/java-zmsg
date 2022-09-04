@@ -5,7 +5,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class AddressManage extends ZcashProxy {
     public AddressManage(){
@@ -35,7 +37,11 @@ public class AddressManage extends ZcashProxy {
                 /*建立在新建账户下获取新地址输入数据格式*/
                 JSONArray paramArray_address = new JSONArray();
                 paramArray_address.add(account);
-                this.con.disconnect();
+
+                List<String> addressType = new ArrayList<String>();
+                // 设置成sapling地址
+                addressType.add("sapling");
+                paramArray_address.add(addressType);
 
                 _con(ip);
                 JSONObject response_address = _sendRequest(ip, "z_getaddressforaccount",paramArray_address,id);
@@ -52,6 +58,11 @@ public class AddressManage extends ZcashProxy {
                 /*建立在新建账户下获取新地址输入数据格式*/
                 JSONArray paramArray_address = new JSONArray();
                 paramArray_address.add(accountNumber);
+
+                List<String> addressType = new ArrayList<String>();
+                addressType.add("sapling");
+                paramArray_address.add(addressType);
+
                 /*建立在新建账户下获取新地址输入数据格式*/
 
                 // 获取反馈数据

@@ -50,7 +50,7 @@ public class ZcashProxy {
         jsonInput.put("params", paramArray);
         jsonInput.put("id", id);
         String jsonInputString = jsonInput.toJSONString();
-//        System.out.println(jsonInputString);
+        System.out.println(jsonInputString);
         /*写入参数到请求中*/
 
         OutputStream out = this.con.getOutputStream();
@@ -103,7 +103,6 @@ public class ZcashProxy {
         out.close();
 
         /*从连接中读取响应信息*/
-
         int code = this.con.getResponseCode();
         // 返回服务器对于HTTP请求的返回信息
         if (code == 200) {
