@@ -5,9 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class AddressManage extends ZcashProxy {
     public AddressManage(){
@@ -79,6 +77,125 @@ public class AddressManage extends ZcashProxy {
             mapResult.put("data",jsonData);
             e.printStackTrace();
         }
+        return mapResult;
+    }
+
+    /**
+     * 查看对应ip的全部地址
+     * @param ip：ip地址
+     * @return mapResult
+     */
+    public HashMap<String,Object> getAllAddress(String ip,String id){
+        HashMap mapResult = new HashMap<String,Object>();
+        try {
+            _con(ip);
+            //建立发送数据格式
+            JSONArray paramArray = new JSONArray();
+            //存储的数据
+            JSONArray jsonData = new JSONArray();
+            // 获取反回数据
+            JSONObject getAllAddressResponse = _sendRequest(ip,"listaddresses",paramArray,id);
+            JSONArray allAddressArray = (JSONArray) getAllAddressResponse.get("data");
+
+            /* 返回数据格式优化*/
+            for(int i=0;i < allAddressArray.size();i++){
+                JSONObject allAddressData = allAddressArray.getJSONObject(i);
+                //存放不同的source的地址
+                JSONObject sourceData = new JSONObject();
+                //存放addressesList
+                JSONArray jsonArray = new JSONArray();
+                sourceData.put("source",allAddressData.get("source"));
+                //存储键对
+                Set<String> keys = allAddressData.keySet();
+                Iterator<String> it = keys.iterator();
+                while(it.hasNext()) {
+                    String key = String.valueOf(it.next());
+                    if(key.equals("source")==false){
+                        // 判断是否是透明地址
+                        if(key.equals("transparent")==false){
+                            JSONArray sameAddressType = (JSONArray)allAddressData.get(key);
+                            for (int j =0;j<sameAddressType.size();j++){
+                                JSONArray addresslist = (JSONArray) sameAddressType.getJSONObject(j).get("addresses");
+                                for (int k=0;k<addresslist.size();k++){
+                                    // 判断是否是统一地址
+                                    if(key.equals("unified")){
+                                        JSONObject addressJson = new JSONObject();
+                                        /* 获取地址 */
+                                        String address = (String) ((JSONObject)addresslist.get(k)).get("address");
+                                        addressJson.put("address",address);
+                                        /* 获取地址 */
+
+                                        /* 获取账号 */
+                                        Integer account = (Integer) sameAddressType.getJSONObject(j).get("account");
+                                        addressJson.put("account",account);
+                                        /* 获取账号 */
+
+//                                        /* 获取地址金额 */
+//                                        _con(ip);
+//                                        JSONArray addressNum = new JSONArray();
+//                                        addressNum.add(address);
+//                                        JSONObject balance = _sendRequest(ip,"z_getbalance",addressNum,id);
+//                                        addressJson.put("amount",balance.get("data"));
+//                                        /* 获取地址金额 */
+                                        jsonArray.add(addressJson);
+                                    }else {
+                                        String address = (String) addresslist.get(k);
+                                        JSONObject addressJson = new JSONObject();
+                                        addressJson.put("address",address);
+
+//                                        /* 获取地址金额 */
+//                                        _con(ip);
+//                                        JSONArray addressNum = new JSONArray();
+//                                        addressNum.add(address);
+//                                        JSONObject balance = _sendRequest(ip,"z_getbalance",addressNum,id);
+//                                        addressJson.put("amount",balance.get("data"));
+//                                        /* 获取地址金额 */
+                                        jsonArray.add(addressJson);
+                                    }
+
+                                }
+
+                            }
+                        }else {
+                            JSONObject sameAddressType = (JSONObject) allAddressData.get(key);
+                            JSONArray addresslist = sameAddressType.getJSONArray("addresses");
+                            for (int j =0;j<addresslist.size();j++){
+                                String address = (String) addresslist.get(j);
+                                JSONObject addressJson = new JSONObject();
+                                addressJson.put("address",address);
+
+//                                /* 获取地址金额 */
+//                                _con(ip);
+//                                JSONArray addressNum = new JSONArray();
+//                                addressNum.add(address);
+//                                JSONObject balance = _sendRequest(ip,"z_getbalance",addressNum,id);
+//                                addressJson.put("amount",balance.get("data"));
+//                                /* 获取地址金额 */
+                                jsonArray.add(addressJson);
+                            }
+
+                        }
+
+                    }
+
+                }
+                sourceData.put("addresses",jsonArray);
+                jsonData.add(sourceData);
+            }
+            /* 返回数据格式优化*/
+
+            mapResult.put("status", "success");
+            mapResult.put("data", jsonData);
+
+
+        } catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        }
+
+
         return mapResult;
     }
 }

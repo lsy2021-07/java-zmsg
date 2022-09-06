@@ -51,7 +51,7 @@ public class ZcashProxy {
         jsonInput.put("params", paramArray);
         jsonInput.put("id", id);
         String jsonInputString = jsonInput.toJSONString();
-        System.out.println(jsonInputString);
+//        System.out.println(jsonInputString);
         /*写入参数到请求中*/
 
         OutputStream out = this.con.getOutputStream();
