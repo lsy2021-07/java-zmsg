@@ -41,7 +41,7 @@ public class SendHistory extends ZcashProxy {
                 JSONObject _jsonObject = jsonArray1.getJSONObject(i);
 
                 String time = unixtimeToData(_jsonObject.getString("creation_time"));
-
+                String opid = _jsonObject.getString("id");
                 _jsonObject = _jsonObject.getJSONObject("params");
                 String _fromaddress = _jsonObject.getString("fromaddress");
                 if (address.equals(_fromaddress)){
@@ -53,6 +53,7 @@ public class SendHistory extends ZcashProxy {
                     resJsonObject.put("receiverAddress",_address);
                     resJsonObject.put("memo",memo);
                     resJsonObject.put("time",time);
+                    resJsonObject.put("opid",opid);
 
                     resJsonList.add(resJsonObject);
                 }
