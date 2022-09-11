@@ -222,7 +222,7 @@ public class ZcashNet {
                         _con(ip);
                         response = _sendRequest(ip,"z_getoperationstatus",paramOpid,id);
                         status = (String)response.getJSONArray("data").getJSONObject(0).get("status");
-                        if(status.equals( "success")){
+                        if(status.equals( "ok")){
                             mapResult.put("status","ok");
                             jsonData.put("opid",opid.get("data"));
                             mapResult.put("data",jsonData);
@@ -238,7 +238,7 @@ public class ZcashNet {
                     }
 
                     // 成功状态
-                    if(status.equals( "success")) {
+                    if(status.equals( "ok")) {
                         mapResult.put("status","ok");
                         jsonData.put("opid",opid.get("data"));
                         mapResult.put("data",jsonData);
@@ -495,7 +495,7 @@ public class ZcashNet {
                 String address = (String) response_address.getJSONObject("data").get("address");
                 jsonData.put("address", address);
                 jsonData.put("account",account);
-                mapResult.put("status", "success");
+                mapResult.put("status", "ok");
                 mapResult.put("data", jsonData);
 
             }else {
@@ -514,7 +514,7 @@ public class ZcashNet {
                 JSONObject jsonData = new JSONObject();
                 String address = (String) getAddressResponse.getJSONObject("data").get("address");
                 jsonData.put("address", address);
-                mapResult.put("status", "success");
+                mapResult.put("status", "ok");
                 mapResult.put("data", jsonData);
             }
         } catch (IOException e) {
@@ -625,7 +625,7 @@ public class ZcashNet {
             }
             /* 返回数据格式优化*/
 
-            mapResult.put("status", "success");
+            mapResult.put("status", "ok");
             mapResult.put("data", jsonData);
 
 
@@ -635,8 +635,6 @@ public class ZcashNet {
             mapResult.put("data",jsonData);
             e.printStackTrace();
         }
-
-
         return mapResult;
     }
     /**  产生新地址  **/

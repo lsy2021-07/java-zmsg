@@ -34,9 +34,9 @@ public class ZcashNetTest {
     }
 
     @Test
-    public void getReceivehistory() {
-        HashMap result = zcashNet.GetReceiveHistory(serviceIp,
-                "zs1h4mx4nt5m3pdqtwg3x9mu9e7wgpuyj2qjp7jf7l0cnjeh0gcmmcsz5vp79w6s5vraza677fsvdp");
+    public void getAllAddress() {
+        HashMap result = zcashNet.getAllAddress(serviceIp, id);
         System.out.println(result);
     }
+
 }
