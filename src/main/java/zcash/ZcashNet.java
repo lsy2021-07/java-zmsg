@@ -222,7 +222,7 @@ public class ZcashNet {
                         _con(ip);
                         response = _sendRequest(ip,"z_getoperationstatus",paramOpid,id);
                         status = (String)response.getJSONArray("data").getJSONObject(0).get("status");
-                        if(status.equals( "ok")){
+                        if(status.equals( "success")){
                             mapResult.put("status","ok");
                             jsonData.put("opid",opid.get("data"));
                             mapResult.put("data",jsonData);
@@ -238,7 +238,7 @@ public class ZcashNet {
                     }
 
                     // 成功状态
-                    if(status.equals( "ok")) {
+                    if(status.equals( "success")) {
                         mapResult.put("status","ok");
                         jsonData.put("opid",opid.get("data"));
                         mapResult.put("data",jsonData);
@@ -249,10 +249,8 @@ public class ZcashNet {
                         jsonData.put("err_msg",response.getJSONArray("data").getJSONObject(0).getJSONObject("error").get("message"));
                         mapResult.put("data",jsonData);
                     }
-
                 }else{
                     mapResult.put("status","error");
-//                    jsonData.put("err_code",);
                     jsonData.put("err_msg","金额数量不足");
                     mapResult.put("data",jsonData);
                 }
