@@ -137,6 +137,7 @@ public class AddressManage extends ZcashProxy {
 //                                        JSONObject balance = _sendRequest(ip,"z_getbalance",addressNum,id);
 //                                        addressJson.put("amount",balance.get("data"));
 //                                        /* 获取地址金额 */
+
                                         jsonArray.add(addressJson);
                                     }else {
                                         String address = (String) addresslist.get(k);
