@@ -640,16 +640,16 @@ public class ZcashNet {
 
     /**  接收历史记录 **/
     public HashMap<String, Object> GetReceiveHistory(String ip, String address){
-        return GetReceiveHistory(ip, address, 0.0);
+        return GetReceiveHistory(ip, address, 1);
     }
-    public HashMap<String, Object> GetReceiveHistory(String ip, String address, Double amount){
+    public HashMap<String, Object> GetReceiveHistory(String ip, String address, Integer minconf){
         HashMap mapResult = new HashMap<String,Object>();
         try{
             _con(ip);
             /*建立输入数据格式*/
             JSONArray paramArray = new JSONArray();
             paramArray.add(address);
-            paramArray.add(amount);
+            paramArray.add(minconf);
             /*建立输入数据格式*/
 
             JSONObject response = _sendRequest(ip,"z_listreceivedbyaddress",paramArray);
