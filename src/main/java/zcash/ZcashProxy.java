@@ -167,6 +167,7 @@ public class ZcashProxy {
     }
 
     public static String hex_decode(String s_hex) {
+
         int index = 0;
         for (int i = s_hex.length() - 1; i >= 0; i--) {
             if (s_hex.charAt(i)!='0'){
