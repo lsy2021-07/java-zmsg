@@ -1,7 +1,6 @@
 package Test;
 
 import org.junit.Test;
-import zcash.GetTransaction;
 import zcash.Receive;
 
 import java.util.HashMap;
