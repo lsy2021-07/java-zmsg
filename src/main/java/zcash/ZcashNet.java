@@ -369,7 +369,7 @@ public class ZcashNet {
             for (int i=0; i < jsonArray.size(); i++){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 jsonObject.put("memo",hex_decode(String.valueOf(jsonObject.get("memo"))));
-                String time = String.valueOf (((JSONObject) new GetTransaction().getTransaction(ip, String.valueOf(jsonObject.get("txid"))).get("data")).get("time"));
+                String time = String.valueOf (((JSONObject) new GetTransactionDetails().getTransaction(ip, String.valueOf(jsonObject.get("txid"))).get("data")).get("time"));
                 jsonObject.put("time",unixtimeToData(time));
             }
             mapResult.put("status","ok");
@@ -703,4 +703,61 @@ public class ZcashNet {
     }
 
     /**  接收历史记录 **/
+
+    /** 交易记录  **/
+
+    public HashMap<String, Object> getTransactionDetails(String ip, String opid) {
+        HashMap mapResult = new HashMap<String,Object>();
+        try{
+            List<String> list = new ArrayList<>();
+            list.add(opid);
+            _con(ip);
+            JSONArray paramArray1 = new JSONArray();
+            paramArray1.add(list);
+            JSONObject response1 = _sendRequest(ip,"z_getoperationstatus", paramArray1);
+            JSONArray jsonArray1 = response1.getJSONArray("data");
+
+            List<JSONObject> resJsonList = new ArrayList<JSONObject>();
+//                System.out.println(jsonArray.get(i));
+            JSONObject _jsonObject = jsonArray1.getJSONObject(0);
+
+            String txid = _jsonObject.getJSONObject("result").getString("txid");
+
+            String time = unixtimeToData(_jsonObject.getString("creation_time"));
+            String _opid = _jsonObject.getString("id");
+            _jsonObject = _jsonObject.getJSONObject("params");
+            String _fromaddress = _jsonObject.getString("fromaddress");
+
+            int _minconf = _jsonObject.getInteger("minconf");
+
+            _jsonObject = _jsonObject.getJSONArray("amounts").getJSONObject(0);
+            String _address = _jsonObject.getString("address");
+            String _amount = _jsonObject.getString("amount");
+            String memo = hex_decode(_jsonObject.getString("memo"));
+            JSONObject resJsonObject = new JSONObject();
+
+            resJsonObject.put("senderAddress",_fromaddress);
+            resJsonObject.put("receiverAddress",_address);
+            resJsonObject.put("memo",memo);
+            resJsonObject.put("time",time);
+            resJsonObject.put("opid",opid);
+            resJsonObject.put("txid",txid);
+            resJsonObject.put("minconf",_minconf);
+            resJsonObject.put("amount",_amount);
+
+            mapResult.put("status","ok");
+            mapResult.put("data",resJsonObject);
+        } catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        }
+        finally {
+            this.con.disconnect();
+        }
+        return mapResult;
+
+    }
+    /** 交易记录  **/
 }
