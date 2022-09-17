@@ -701,8 +701,40 @@ public class ZcashNet {
         }
         return mapResult;
     }
-
     /**  接收历史记录 **/
+
+    /** 接受详情**/
+    public HashMap<String, Object> getReceiveDetail(String ip, String txid) {
+        HashMap mapResult = new HashMap<java.lang.String, java.lang.Object>();
+        try{
+            _con(ip);
+            JSONArray paramArray1 = new JSONArray();
+            paramArray1.add(txid);
+            JSONObject response1 = _sendRequest(ip,"z_viewtransaction", paramArray1);
+            JSONObject jsonData = response1.getJSONObject("data");
+
+            JSONObject jsonResult = new JSONObject();
+            jsonResult.put("txid",jsonData.get("txid"));
+            jsonResult.put("sendAddress",((JSONObject)jsonData.getJSONArray("spends").get(0)).get("address"));
+            jsonResult.put("amount",((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("value"));
+            jsonResult.put("memo",((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("memoStr"));
+
+
+            mapResult.put("status","ok");
+            mapResult.put("data",jsonResult);
+        }catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        }
+        finally {
+            this.con.disconnect();
+        }
+        return mapResult;
+    }
+    /**  接收历史记录 **/
+
 
     /** 交易记录  **/
 
@@ -714,7 +746,7 @@ public class ZcashNet {
             _con(ip);
             JSONArray paramArray1 = new JSONArray();
             paramArray1.add(list);
-            JSONObject response1 = _sendRequest(ip,"z_getoperationstatus", paramArray1);
+            JSONObject response1 = _sendRequest(ip,"gettransaction", paramArray1);
             JSONArray jsonArray1 = response1.getJSONArray("data");
 
             List<JSONObject> resJsonList = new ArrayList<JSONObject>();

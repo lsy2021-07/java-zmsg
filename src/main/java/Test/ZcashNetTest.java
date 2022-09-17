@@ -16,7 +16,7 @@ public class ZcashNetTest {
         HashMap result_success = zcashNet.sendMessage(serviceIp,
                 "zs1w9sk86zx980lu0e30zm8t9xp3cjadhwnel70qyhtzmawuppjq66kmmmkv409eg90sk4jxdymjwg",
                 "zs1h4mx4nt5m3pdqtwg3x9mu9e7wgpuyj2qjp7jf7l0cnjeh0gcmmcsz5vp79w6s5vraza677fsvdp",
-                "0.001","hello test 9.11",id);
+                "0.003","hello test2 9.17",id);
         System.out.println("成功："+result_success);
     }
 
@@ -49,6 +49,20 @@ public class ZcashNetTest {
     @Test
     public void getAllAddress() {
         HashMap result = zcashNet.getAllAddress(serviceIp, id);
+        System.out.println(result);
+    }
+
+    @Test
+    public void getTransactionDetails() {
+        String opid = "opid-1c1346f6-5223-4a39-9463-372be8361f4a";
+        HashMap result = zcashNet.getTransactionDetails(serviceIp,opid);
+        System.out.println(result);
+    }
+
+    @Test
+    public void getReceiveDetails() {
+        String txid = "550499b2d2f48cfda0a6e91f6a82c0efbdf2aa978346b147023871789f6738a0";
+        HashMap result = zcashNet.getReceiveDetail(serviceIp,txid);
         System.out.println(result);
     }
 
