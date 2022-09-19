@@ -717,6 +717,7 @@ public class ZcashNet {
             JSONObject jsonResult = new JSONObject();
             jsonResult.put("txid",jsonData.get("txid"));
             jsonResult.put("sendAddress",((JSONObject)jsonData.getJSONArray("spends").get(0)).get("address"));
+            jsonResult.put("receiveAddress",((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("address"));
             jsonResult.put("amount",((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("value"));
             jsonResult.put("memo",((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("memoStr"));
 
