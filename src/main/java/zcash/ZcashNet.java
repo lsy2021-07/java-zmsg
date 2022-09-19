@@ -339,6 +339,7 @@ public class ZcashNet {
     public String unixtimeToData(String time){
         time += "000";   // python time stamp to java time stamp
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         return  simpleDateFormat.format(new Date(new Long(time)));
     }
 

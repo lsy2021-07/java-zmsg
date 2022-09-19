@@ -54,14 +54,14 @@ public class ZcashNetTest {
 
     @Test
     public void getTransactionDetails() {
-        String opid = "opid-a075e2c2-c66c-4746-b7fc-4c2f79dcbf0e";
+        String opid = "opid-6f84e135-bdc1-4244-bf6a-4d7509adbe2b";
         HashMap result = zcashNet.getTransactionDetails(serviceIp,opid);
         System.out.println(result);
     }
 
     @Test
     public void getReceiveDetails() {
-        String txid = "550499b2d2f48cfda0a6e91f6a82c0efbdf2aa978346b147023871789f6738a0";
+        String txid = "26207398d65f4c2e0cbcda8d6a2c9fc746b2ff26568ed37016aa6b3ca531601d";
         HashMap result = zcashNet.getReceiveDetail(serviceIp,txid);
         System.out.println(result);
     }
