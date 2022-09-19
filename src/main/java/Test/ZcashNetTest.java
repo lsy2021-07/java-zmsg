@@ -54,7 +54,7 @@ public class ZcashNetTest {
 
     @Test
     public void getTransactionDetails() {
-        String opid = "opid-1c1346f6-5223-4a39-9463-372be8361f4a";
+        String opid = "opid-a075e2c2-c66c-4746-b7fc-4c2f79dcbf0e";
         HashMap result = zcashNet.getTransactionDetails(serviceIp,opid);
         System.out.println(result);
     }

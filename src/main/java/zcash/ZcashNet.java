@@ -746,7 +746,7 @@ public class ZcashNet {
             _con(ip);
             JSONArray paramArray1 = new JSONArray();
             paramArray1.add(list);
-            JSONObject response1 = _sendRequest(ip,"gettransaction", paramArray1);
+            JSONObject response1 = _sendRequest(ip,"z_getoperationstatus", paramArray1);
             JSONArray jsonArray1 = response1.getJSONArray("data");
 
             List<JSONObject> resJsonList = new ArrayList<JSONObject>();
