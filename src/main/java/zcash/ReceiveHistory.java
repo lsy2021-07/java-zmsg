@@ -61,7 +61,7 @@ public class ReceiveHistory extends ZcashProxy {
                 String memo_address = hex_decode(String.valueOf(jsonObject.get("memo")));
                 String txid = jsonObject.getString("txid");
                 int index = memo_address.lastIndexOf("reply to:");
-                String memo="",sendAddress="";
+                String memo="",sendAddress="匿名地址";
 
                 if (index==-1){
                     memo = memo_address;
