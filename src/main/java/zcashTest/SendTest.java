@@ -1,11 +1,9 @@
-package Test;
+package zcashTest;
 
 import org.junit.Test;
 import zcash.Send;
 
 import java.util.HashMap;
-
-import static org.junit.Assert.*;
 
 public class SendTest {
     String serviceIp = "8.219.9.193";

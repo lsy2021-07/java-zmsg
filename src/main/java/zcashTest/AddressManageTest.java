@@ -1,4 +1,4 @@
-package Test;
+package zcashTest;
 
 import org.junit.Test;
 import zcash.AddressManage;
