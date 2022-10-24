@@ -26,12 +26,11 @@ public class AddressManage extends HorizenProxy {
             JSONArray paramArray = new JSONArray();
             JSONObject response = _sendRequest( "z_getnewaddress",paramArray,id);
             /*创建新地址*/
-            System.out.println(response);
             JSONObject jsonData = new JSONObject();
             if(response.getJSONObject("error") == null){
                 String address = (String) response.get("data");
                 jsonData.put("address", address);
-                mapResult.put("status", "success");
+                mapResult.put("status", "ok");
                 mapResult.put("data",jsonData);
             }else{
                 mapResult.put("status","error");
@@ -66,7 +65,7 @@ public class AddressManage extends HorizenProxy {
             if(response.getJSONObject("error") == null){
                 JSONArray addressList = response.getJSONArray("data");
                 jsonData.put("addresses",addressList);
-                mapResult.put("status", "success");
+                mapResult.put("status", "ok");
                 mapResult.put("data", jsonData);
             }else{
                 mapResult.put("status","error");

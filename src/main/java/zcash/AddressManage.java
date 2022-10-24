@@ -49,7 +49,7 @@ public class AddressManage extends ZcashProxy {
                 String address = (String) response_address.getJSONObject("data").get("address");
                 jsonData.put("address", address);
                 jsonData.put("account",account);
-                mapResult.put("status", "success");
+                mapResult.put("status", "ok");
                 mapResult.put("data", jsonData);
 
             }else {
@@ -185,7 +185,7 @@ public class AddressManage extends ZcashProxy {
             }
             /* 返回数据格式优化*/
 
-            mapResult.put("status", "success");
+            mapResult.put("status", "ok");
             mapResult.put("data", jsonData);
 
 
