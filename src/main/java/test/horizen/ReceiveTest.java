@@ -25,32 +25,6 @@ public void before() throws Exception {
 public void after() throws Exception { 
 } 
 
-/** 
-* 
-* Method: checkMessage(String ip, String address) 
-* 
-*/ 
-@Test
-public void testCheckMessage() throws Exception {
-    String address = "zcT9KxyzFFvCho8PArnDkWCjTN8Y7Mfm3NRQvDLMW1nNTvHfqTRSuNW9TUNYBkan8yEwWfmxg5Qhr89GothKWBgLBXwjBNa";
-    HashMap result =  receive.checkMessage(serviceIp,address);
-    System.out.println(result);
-} 
-
-/** 
-* 
-* Method: checkMessage(String ip, String address, Double amount) 
-* 
-*/ 
-@Test
-public void testCheckMessageWithAmount() throws Exception {
-    String address = "zcT9KxyzFFvCho8PArnDkWCjTN8Y7Mfm3NRQvDLMW1nNTvHfqTRSuNW9TUNYBkan8yEwWfmxg5Qhr89GothKWBgLBXwjBNa";
-    Double amount = 1.0;
-    HashMap result =  receive.checkMessage(serviceIp,address,amount);
-    System.out.println(result);
-
-}
-
 /**
 * 
 * Method: GetReceiveHistory(String ip, String address) 
@@ -59,20 +33,9 @@ public void testCheckMessageWithAmount() throws Exception {
 @Test
 public void testGetReceiveHistory() throws Exception {
     String address = "zcT9KxyzFFvCho8PArnDkWCjTN8Y7Mfm3NRQvDLMW1nNTvHfqTRSuNW9TUNYBkan8yEwWfmxg5Qhr89GothKWBgLBXwjBNa";
-//    Double amount = 1.0;
-    HashMap result =  receive.getReceiveHistory(serviceIp,address);
+    String id = "testGetReceiveHistory";
+    HashMap result =  receive.getReceiveHistory(serviceIp,address,id);
     System.out.println(result);
 } 
-
-/** 
-* 
-* Method: GetReceiveHistory(String ip, String address, Double amount) 
-* 
-*/ 
-@Test
-public void testGetReceiveWithAmount() throws Exception {
-//TODO: Test goes here...
-} 
-
 
 } 

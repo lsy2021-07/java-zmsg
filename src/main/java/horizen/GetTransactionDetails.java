@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GetTransactionDetails extends HorizenProxy {
 
-    public HashMap<String, Object> getTransaction(String ip, String txid) {
+    public HashMap<String, Object> getTransaction(String ip, String txid, String id) {
         HashMap mapResult = new HashMap<String,Object>();
         try{
             _con(ip);
@@ -20,34 +20,7 @@ public class GetTransactionDetails extends HorizenProxy {
             paramArray.add(txid);
             /*建立输入数据格式*/
 
-            JSONObject response = _sendRequest("gettransaction",paramArray);
-            JSONObject jsonData = JSON.parseObject(String.valueOf(response.get("data")));
-
-            mapResult.put("status","ok");
-            mapResult.put("data",jsonData);
-
-        } catch (IOException e) {
-            mapResult.put("status","error");
-            JSONObject jsonData = JSON.parseObject(e.getMessage());
-            mapResult.put("data",jsonData);
-            e.printStackTrace();
-        }
-        finally {
-            this.con.disconnect();
-        }
-        return mapResult;
-    }
-    /*horizen暂不支持该方法*/
-    public HashMap<String, Object> getZtransaction(String ip, String txid) {
-        HashMap mapResult = new HashMap<String,Object>();
-        try{
-            _con(ip);
-            /*建立输入数据格式*/
-            JSONArray paramArray = new JSONArray();
-            paramArray.add(txid);
-            /*建立输入数据格式*/
-
-            JSONObject response = _sendRequest("z_viewtransaction",paramArray);
+            JSONObject response = _sendRequest("gettransaction",paramArray,id);
             JSONObject jsonData = JSON.parseObject(String.valueOf(response.get("data")));
 
             mapResult.put("status","ok");
@@ -65,8 +38,7 @@ public class GetTransactionDetails extends HorizenProxy {
         return mapResult;
     }
 
-
-    public HashMap<String, Object> getTransactionDetails(String ip, String opid) {
+    public HashMap<String, Object> getTransactionDetails(String ip, String opid, String id) {
         HashMap mapResult = new HashMap<String,Object>();
         try{
             List<String> list = new ArrayList<>();
@@ -74,7 +46,7 @@ public class GetTransactionDetails extends HorizenProxy {
             _con(ip);
             JSONArray paramArray1 = new JSONArray();
             paramArray1.add(list);
-            JSONObject response1 = _sendRequest("z_getoperationstatus", paramArray1);
+            JSONObject response1 = _sendRequest("z_getoperationstatus", paramArray1, id);
             JSONArray jsonArray1 = response1.getJSONArray("data");
 
             List<JSONObject> resJsonList = new ArrayList<JSONObject>();

@@ -3,12 +3,10 @@ package horizen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import horizen.GetTransactionDetails;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 public class Receive extends HorizenProxy{
 
@@ -38,52 +36,6 @@ public class Receive extends HorizenProxy{
         return  simpleDateFormat.format(new Date(new Long(time)));
     }
 
-    public HashMap<String, Object> checkMessage(String ip, String address) {
-        return checkMessage(ip, address, 0.0);
-    }
-    /**
-     * check message about a specified address
-     * @param ip：ip
-     * @param address：地址
-     * @param amount: 金额数量
-     * @return
-     */
-    public HashMap<String, Object> checkMessage(String ip, String address, Double amount) {
-        HashMap mapResult = new HashMap<String,Object>();
-        try{
-            _con(ip);
-            /*建立输入数据格式*/
-            JSONArray paramArray = new JSONArray();
-            paramArray.add(address);
-            paramArray.add(amount);
-            /*建立输入数据格式*/
-
-            JSONObject response = _sendRequest("z_listreceivedbyaddress",paramArray);
-            JSONArray jsonArray = JSONArray.parseArray(String.valueOf(response.get("data")) );
-
-            for (int i=0; i < jsonArray.size(); i++){
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                jsonObject.put("memo",hex_decode(String.valueOf(jsonObject.get("memo"))));
-                String time = String.valueOf (((JSONObject) new GetTransactionDetails().getTransaction(ip, String.valueOf(jsonObject.get("txid"))).get("data")).get("time"));
-                jsonObject.put("time",unixtimeToData(time));
-            }
-            mapResult.put("status","ok");
-            mapResult.put("data",jsonArray);
-        } catch (IOException e) {
-            mapResult.put("status","error");
-            JSONObject jsonData = JSON.parseObject(e.getMessage());
-            mapResult.put("data",jsonData);
-            e.printStackTrace();
-        }
-        finally {
-            this.con.disconnect();
-        }
-        return mapResult;
-    }
-
-    public HashMap<String, Object> getReceiveHistory(String ip, String address) {
-        return getReceiveHistory(ip, address, 0.0);
-    }
     /**
      * 获取对应地址接受历史
      * @param ip:ip
@@ -91,39 +43,58 @@ public class Receive extends HorizenProxy{
      * @param amount：金额
      * @return
      */
-    public HashMap<String, Object> getReceiveHistory(String ip, String address,Double amount){
+    /**  接收历史记录 **/
+    public HashMap<String, Object> getReceiveHistory(String ip, String address, String id){
+        return getReceiveHistory(ip, address, 1,id);
+    }
+    public HashMap<String, Object> getReceiveHistory(String ip, String address, Integer minconf, String id){
         HashMap mapResult = new HashMap<String,Object>();
         try{
             _con(ip);
             /*建立输入数据格式*/
             JSONArray paramArray = new JSONArray();
             paramArray.add(address);
-            paramArray.add(amount);
+            paramArray.add(minconf);
             /*建立输入数据格式*/
 
-            JSONObject response = _sendRequest("z_listreceivedbyaddress",paramArray);
+            JSONObject response = _sendRequest("z_listreceivedbyaddress",paramArray,id);
 
             JSONArray jsonArray = JSONArray.parseArray(String.valueOf(response.get("data")) );
-
+            List<JSONObject> resJsonList = new ArrayList<JSONObject>();
             for (int i=0; i < jsonArray.size(); i++){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String time = String.valueOf(jsonObject.get("blocktime"));
-                jsonObject.put("memo",hex_decode(String.valueOf(jsonObject.get("memo"))));
-                JSONArray jsonArray1 = JSON.parseObject(String.valueOf(new GetTransactionDetails().getTransaction(ip, String.valueOf(jsonObject.get("txid"))).get("data"))).getJSONArray("outputs");
+                String time = String.valueOf (((JSONObject) new GetTransactionDetails().getTransaction(ip, String.valueOf(jsonObject.get("txid")), id).get("data")).get("time"));
+                String memo_address = hex_decode(String.valueOf(jsonObject.get("memo")));
+                String txid = jsonObject.getString("txid");
+                int index = memo_address.lastIndexOf("reply to:");
+                String memo="",sendAddress="";
 
-                if (!address.equals(jsonArray1.getJSONObject(0).get("address"))){
-                    jsonObject.put("sender",jsonArray1.getJSONObject(0).get("address"));
-                }
-                else if (jsonArray1.size() > 1 && !address.equals(jsonArray1.getJSONObject(1).get("address"))){
-                    jsonObject.put("sender",jsonArray1.getJSONObject(1).get("address"));
+                if (index==-1){
+                    memo = memo_address;
                 }
                 else{
-                    jsonObject.put("sender","");
+                    memo = memo_address.substring(0,index);
+                    sendAddress = memo_address.substring(index+9);
                 }
-                jsonObject.put("time",unixtimeToData(time));
+                JSONObject _jsonObject = new JSONObject();
+                _jsonObject.put("txid",txid);
+                _jsonObject.put("memo",memo);
+                _jsonObject.put("sendAddress",sendAddress);
+                _jsonObject.put("time",unixtimeToData(time));
+                resJsonList.add(_jsonObject);
             }
+            Collections.sort(resJsonList, new Comparator<JSONObject>() {
+                //You can change "Name" with "ID" if you want to sort by ID
+                @Override
+                public int compare(JSONObject a, JSONObject b) {
+                    String x = (String) a.get("time");
+                    String y = (String) b.get("time");
+                    return -x.compareTo(y);
+                }
+            });
+            JSONArray resJsonArray = JSONArray.parseArray(resJsonList.toString());
             mapResult.put("status","ok");
-            mapResult.put("data",jsonArray);
+            mapResult.put("data",resJsonArray);
         } catch (IOException e) {
             mapResult.put("status","error");
             JSONObject jsonData = JSON.parseObject(e.getMessage());
@@ -135,5 +106,6 @@ public class Receive extends HorizenProxy{
         }
         return mapResult;
     }
+
 
 }

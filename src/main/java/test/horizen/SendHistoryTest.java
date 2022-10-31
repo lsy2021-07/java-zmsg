@@ -35,9 +35,9 @@ public void after() throws Exception {
 @Test
 public void testGetSendHistory() throws Exception { 
     String address = "zcJvmw9ZmH7CVxavbE2q88qJbipD5WD6G4Xk2DoTjPsf8zmkJtr9MxZkLsyumTyr67DSKad5S4CBWsfUfYjTsYd9t39BXNn";
-    HashMap result = sendHistory.getSendHistory(serviceIp,address);
+    String id = "testGetSendHistory";
+    HashMap result = sendHistory.getSendHistory(serviceIp,address,id);
     System.out.println(result);
 } 
-
 
 } 

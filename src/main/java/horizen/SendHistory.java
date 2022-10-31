@@ -9,7 +9,7 @@ import java.util.*;
 
 public class SendHistory extends HorizenProxy {
 
-    public HashMap<String, Object> getSendHistory(String ip, String address){
+    public HashMap<String, Object> getSendHistory(String ip, String address, String id){
         HashMap mapResult = new HashMap<String,Object>();
         try{
             _con(ip);
@@ -17,7 +17,7 @@ public class SendHistory extends HorizenProxy {
             JSONArray paramArray = new JSONArray();
             /*建立输入数据格式*/
 
-            JSONObject response = _sendRequest("z_listoperationids", paramArray);
+            JSONObject response = _sendRequest("z_listoperationids", paramArray, id);
             JSONArray jsonArray = response.getJSONArray("data");
             List<String> list = new ArrayList<>();
             for (int i=0; i < jsonArray.size(); i++) {

@@ -34,7 +34,8 @@ public void after() throws Exception {
 @Test
 public void testGetTransaction() throws Exception {
     String txid = "5cd3bc81fc78ce6b5bcb34ecaf4a58ad750dde16bf267409a303f2f6d8a16e7a";
-    HashMap result = getTransactionDetails.getTransaction(serviceIp,txid);
+    String id  = "testGetTransaction";
+    HashMap result = getTransactionDetails.getTransaction(serviceIp,txid,id);
     System.out.println(result);
 } 
 
@@ -56,7 +57,8 @@ public void testGetZtransaction() throws Exception {
 @Test
 public void testGetTransactionDetails() throws Exception {
     String opid = "opid-04a05510-6edf-4734-95cd-d97c43dfa7a6";
-    HashMap result = getTransactionDetails.getTransactionDetails(serviceIp,opid);
+    String id  = "testGetTransactionDetails";
+    HashMap result = getTransactionDetails.getTransactionDetails(serviceIp,opid,id);
     System.out.println(result);
 
 } 
