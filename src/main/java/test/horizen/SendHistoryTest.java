@@ -38,6 +38,5 @@ public void testGetSendHistory() throws Exception {
     String id = "testGetSendHistory";
     HashMap result = sendHistory.getSendHistory(serviceIp,address,id);
     System.out.println(result);
-} 
-
+}
 } 

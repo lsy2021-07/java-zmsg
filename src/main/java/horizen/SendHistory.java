@@ -28,7 +28,7 @@ public class SendHistory extends HorizenProxy {
             _con(ip);
             JSONArray paramArray1 = new JSONArray();
             paramArray1.add(list);
-            JSONObject response1 = _sendRequest("z_getoperationstatus", paramArray1);
+            JSONObject response1 = _sendRequest("z_getoperationstatus", paramArray1, id);
             JSONArray jsonArray1 = response1.getJSONArray("data");
 
             List<JSONObject> resJsonList = new ArrayList<JSONObject>();
