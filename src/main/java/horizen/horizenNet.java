@@ -17,9 +17,13 @@ import java.util.*;
 
 import static java.lang.Thread.sleep;
 
-public class horizenNet {
+public class HorizenNet {
     HttpURLConnection con;
     List<String> ipSet = new ArrayList<>(Arrays.asList("8.219.9.193"));  //服务器ip集合
+
+    public HorizenNet(){
+
+    }
 
     /** 基础连接模块 **/
     public void _con(String serviceIp) throws IOException {
@@ -86,34 +90,6 @@ public class horizenNet {
 
         /*从连接中读取响应信息*/
         return result;
-    }
-
-
-    public HashMap<String, Object> _opidTotxid(String ip, String opid, String id) {
-        HashMap mapResult = new HashMap<String,Object>();
-        try{
-            _con(ip);
-            /*建立输入数据格式*/
-            JSONArray paramArray = new JSONArray();
-            List<String> list=new ArrayList<>();
-            list.add(opid);
-            paramArray.add(list);
-            JSONObject response = _sendRequest("z_getoperationstatus",paramArray, id);
-            JSONObject jsonData = JSON.parseObject(String.valueOf(response.getJSONArray("data").getJSONObject(0)));
-            String txid = (String) JSON.parseObject(String.valueOf(jsonData.get("result"))).get("txid");
-            mapResult.put("status","ok");
-            mapResult.put("data",txid);
-        } catch (IOException e) {
-            mapResult.put("status","error");
-            JSONObject jsonData = JSON.parseObject(e.getMessage());
-            mapResult.put("data",jsonData);
-            e.printStackTrace();
-        }
-        finally {
-            this.con.disconnect();
-        }
-        System.out.println(mapResult);
-        return mapResult;
     }
 
     public static String hex_decode(String s_hex) {
@@ -311,6 +287,8 @@ public class horizenNet {
     public HashMap<String, Object> getReceiveHistory(String ip, String address, String id){
         return getReceiveHistory(ip, address, 1,id);
     }
+
+
     public HashMap<String, Object> getReceiveHistory(String ip, String address, Integer minconf, String id){
         HashMap mapResult = new HashMap<String,Object>();
         try{
