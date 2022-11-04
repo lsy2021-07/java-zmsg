@@ -288,7 +288,6 @@ public class HorizenNet {
         return getReceiveHistory(ip, address, 1,id);
     }
 
-
     public HashMap<String, Object> getReceiveHistory(String ip, String address, Integer minconf, String id){
         HashMap mapResult = new HashMap<String,Object>();
         try{
@@ -350,7 +349,6 @@ public class HorizenNet {
     }
 
     /** 地址管理模块 **/
-
     /**
      * 如果用户有对应账户则生成新地址，否则创建新的账户后生成新地址
      * @param ip：地址
@@ -376,7 +374,6 @@ public class HorizenNet {
                 mapResult.put("status","error");
                 mapResult.put("data",response.getJSONObject("error"));
             }
-
         } catch (IOException e) {
             mapResult.put("status","error");
             JSONObject jsonData = JSON.parseObject(e.getMessage());
@@ -395,7 +392,6 @@ public class HorizenNet {
         HashMap mapResult = new HashMap<String,Object>();
         try {
             _con(ip);
-
             /*获取地址*/
             JSONArray paramArray = new JSONArray();
             JSONObject response = _sendRequest( "z_listaddresses",paramArray,id);
@@ -429,7 +425,6 @@ public class HorizenNet {
             /*建立输入数据格式*/
             JSONArray paramArray = new JSONArray();
             /*建立输入数据格式*/
-
             JSONObject response = _sendRequest("z_listoperationids", paramArray, id);
             JSONArray jsonArray = response.getJSONArray("data");
             List<String> list = new ArrayList<>();
@@ -437,13 +432,11 @@ public class HorizenNet {
                 String opid = (String) jsonArray.get(i);
                 list.add(opid);
             }
-
             _con(ip);
             JSONArray paramArray1 = new JSONArray();
             paramArray1.add(list);
             JSONObject response1 = _sendRequest("z_getoperationstatus", paramArray1, id);
             JSONArray jsonArray1 = response1.getJSONArray("data");
-
             List<JSONObject> resJsonList = new ArrayList<JSONObject>();
 
             for (int i=0; i < jsonArray1.size(); i++) {
@@ -489,5 +482,59 @@ public class HorizenNet {
             this.con.disconnect();
         }
         return mapResult;
+    }
+
+    /** 获取交易详情模块 **/
+    public HashMap<String, Object> getTransactionDetails(String ip, String opid, String id) {
+        HashMap mapResult = new HashMap<String,Object>();
+        try{
+            List<String> list = new ArrayList<>();
+            list.add(opid);
+            _con(ip);
+            JSONArray paramArray1 = new JSONArray();
+            paramArray1.add(list);
+            JSONObject response1 = _sendRequest("z_getoperationstatus", paramArray1, id);
+            JSONArray jsonArray1 = response1.getJSONArray("data");
+
+            List<JSONObject> resJsonList = new ArrayList<JSONObject>();
+            JSONObject _jsonObject = jsonArray1.getJSONObject(0);
+
+            String txid = _jsonObject.getJSONObject("result").getString("txid");
+
+            String time = unixtimeToData(_jsonObject.getString("creation_time"));
+            String _opid = _jsonObject.getString("id");
+            _jsonObject = _jsonObject.getJSONObject("params");
+            String _fromaddress = _jsonObject.getString("fromaddress");
+
+            int _minconf = _jsonObject.getInteger("minconf");
+
+            _jsonObject = _jsonObject.getJSONArray("amounts").getJSONObject(0);
+            String _address = _jsonObject.getString("address");
+            String _amount = _jsonObject.getString("amount");
+            String memo = hex_decode(_jsonObject.getString("memo"));
+            JSONObject resJsonObject = new JSONObject();
+
+            resJsonObject.put("senderAddress",_fromaddress);
+            resJsonObject.put("receiverAddress",_address);
+            resJsonObject.put("memo",memo);
+            resJsonObject.put("time",time);
+            resJsonObject.put("opid",opid);
+            resJsonObject.put("txid",txid);
+            resJsonObject.put("minconf",_minconf);
+            resJsonObject.put("amount",_amount);
+
+            mapResult.put("status","ok");
+            mapResult.put("data",resJsonObject);
+        } catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        }
+        finally {
+            this.con.disconnect();
+        }
+        return mapResult;
+
     }
 }
