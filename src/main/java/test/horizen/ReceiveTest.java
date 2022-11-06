@@ -36,6 +36,15 @@ public void testGetReceiveHistory() throws Exception {
     String id = "testGetReceiveHistory";
     HashMap result =  receive.getReceiveHistory(serviceIp,address,id);
     System.out.println(result);
-} 
+}
+
+@Test
+public void testOp_getReceiveHistory() throws Exception {
+    String address = "zcT9KxyzFFvCho8PArnDkWCjTN8Y7Mfm3NRQvDLMW1nNTvHfqTRSuNW9TUNYBkan8yEwWfmxg5Qhr89GothKWBgLBXwjBNa";
+    String id = "testOp_getReceiveHistory";
+    HashMap result =  receive.Op_getReceiveHistory(serviceIp,address,id);
+    System.out.println(result);
+}
+
 
 } 

@@ -57,7 +57,7 @@ public void testGetZtransaction() throws Exception {
 @Test
 public void testGetTransactionDetails() throws Exception {
 //    String opid = "opid-04a05510-6edf-4734-95cd-d97c43dfa7a6";
-    String opid = "opid-9defdd3a-8cb5-4cc2-8a74-73e8aecd1d0f";
+    String opid = "opid-76172e8e-efef-4f79-8904-a6c3190b5796";
     String id  = "testGetTransactionDetails";
     HashMap result = getTransactionDetails.getTransactionDetails(serviceIp,opid,id);
     System.out.println(result);
