@@ -97,7 +97,14 @@ public void testGetAllAddress() throws Exception {
 @Test
 public void testGetSendHistory() throws Exception { 
 //TODO: Test goes here... 
-} 
+}
 
-
+@Test
+public void testGetTransactionDetailWithTx() throws Exception {
+    String address = "zcT9KxyzFFvCho8PArnDkWCjTN8Y7Mfm3NRQvDLMW1nNTvHfqTRSuNW9TUNYBkan8yEwWfmxg5Qhr89GothKWBgLBXwjBNa";
+    String txid = "0a980f67a1c1101e63c79a32f1bf53b91e0cccd2e4def76f75c69da6368d24cd";
+    String id = "testGetReceiveHistory";
+    HashMap result =  horizenNet.getTransactionDetailsWithTx(serviceIp,address,txid,id);
+    System.out.println(result);
+}
 } 

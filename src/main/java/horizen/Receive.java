@@ -66,6 +66,7 @@ public class Receive extends HorizenProxy{
                 String time = String.valueOf (((JSONObject) new GetTransactionDetails().getTransaction(ip, String.valueOf(jsonObject.get("txid")), id).get("data")).get("time"));
                 String memo_address = hex_decode(String.valueOf(jsonObject.get("memo")));
                 String txid = jsonObject.getString("txid");
+                String amount = jsonObject.getString("amount");
                 int index = memo_address.lastIndexOf("reply to:");
                 String memo="",sendAddress="";
 
@@ -79,6 +80,7 @@ public class Receive extends HorizenProxy{
                 JSONObject _jsonObject = new JSONObject();
                 _jsonObject.put("txid",txid);
                 _jsonObject.put("memo",memo);
+                _jsonObject.put("amount",amount);
                 _jsonObject.put("sendAddress",sendAddress);
                 _jsonObject.put("time",unixtimeToData(time));
                 resJsonList.add(_jsonObject);

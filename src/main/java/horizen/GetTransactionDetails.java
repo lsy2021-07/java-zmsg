@@ -50,7 +50,6 @@ public class GetTransactionDetails extends HorizenProxy {
             JSONArray jsonArray1 = response1.getJSONArray("data");
 
             List<JSONObject> resJsonList = new ArrayList<JSONObject>();
-//                System.out.println(jsonArray.get(i));
             JSONObject _jsonObject = jsonArray1.getJSONObject(0);
 
             String txid = _jsonObject.getJSONObject("result").getString("txid");
@@ -91,4 +90,5 @@ public class GetTransactionDetails extends HorizenProxy {
         return mapResult;
 
     }
+
 }

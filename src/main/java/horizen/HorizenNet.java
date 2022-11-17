@@ -307,6 +307,7 @@ public class HorizenNet {
                 String time = String.valueOf (((JSONObject) new GetTransactionDetails().getTransaction(ip, String.valueOf(jsonObject.get("txid")), id).get("data")).get("time"));
                 String memo_address = hex_decode(String.valueOf(jsonObject.get("memo")));
                 String txid = jsonObject.getString("txid");
+                String amount = jsonObject.getString("amount");
                 int index = memo_address.lastIndexOf("reply to:");
                 String memo="",sendAddress="";
 
@@ -320,6 +321,7 @@ public class HorizenNet {
                 JSONObject _jsonObject = new JSONObject();
                 _jsonObject.put("txid",txid);
                 _jsonObject.put("memo",memo);
+                _jsonObject.put("amount",amount);
                 _jsonObject.put("sendAddress",sendAddress);
                 _jsonObject.put("time",unixtimeToData(time));
                 resJsonList.add(_jsonObject);
@@ -526,6 +528,44 @@ public class HorizenNet {
             mapResult.put("status","ok");
             mapResult.put("data",resJsonObject);
         } catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        }
+        finally {
+            this.con.disconnect();
+        }
+        return mapResult;
+    }
+
+    public HashMap<String, Object> getTransactionDetailsWithTx(String ip, String address, String txid, String id) {
+        HashMap mapResult = new HashMap<String,Object>();
+        try {
+            _con(ip);
+            /*建立输入数据格式*/
+            JSONArray paramArray = new JSONArray();
+            HashMap receive_by_address = getReceiveHistory(ip,address,id);
+            JSONObject resJsonObject = new JSONObject();
+            JSONArray receiveArray = (JSONArray) receive_by_address.get("data");
+            for (int i=0; i < receiveArray.size(); i++){
+                JSONObject jsonObject = receiveArray.getJSONObject(i);
+                String reciveTxid = jsonObject.getString("txid");
+                if (reciveTxid.equals(txid)){
+                    resJsonObject.put("memo",jsonObject.getString("memo"));
+                    resJsonObject.put("txid",txid);
+                    resJsonObject.put("amount",jsonObject.getString("amount"));
+                    resJsonObject.put("time",jsonObject.getString("time"));
+                    if(jsonObject.getString("sendAddress").equals("")){
+                        resJsonObject.put("sendAddress","****************");
+                    }else{
+                        resJsonObject.put("sendAddress", jsonObject.getString("sendAddress"));
+                    }
+                }
+            }
+            mapResult.put("status","ok");
+            mapResult.put("data",resJsonObject);
+        }catch (IOException e) {
             mapResult.put("status","error");
             JSONObject jsonData = JSON.parseObject(e.getMessage());
             mapResult.put("data",jsonData);
