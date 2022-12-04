@@ -409,6 +409,7 @@ public class ZcashNet {
             }
 
             _con(ip);
+
             JSONArray paramArray1 = new JSONArray();
             paramArray1.add(list);
             JSONObject response1 = _sendRequest(ip,"z_getoperationstatus", paramArray1);

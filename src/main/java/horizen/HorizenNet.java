@@ -385,6 +385,67 @@ public class HorizenNet {
         return mapResult;
     }
 
+    public HashMap<String, Object> generateAddress(String ip, String id, Integer accountNumber){
+        HashMap mapResult = new HashMap<String,Object>();
+        try {
+            _con(ip);
+
+            if(accountNumber == null) {
+                /*创建新帐户*/
+                JSONArray paramArray = new JSONArray();
+                JSONObject response = _sendRequest("z_getnewaccount",paramArray,id);
+                /*创建新帐户*/
+
+                /*创建账户成功*/
+                int account = (int) response.getJSONObject("data").get("account");
+                /*建立在新建账户下获取新地址输入数据格式*/
+                JSONArray paramArray_address = new JSONArray();
+                paramArray_address.add(account);
+
+                List<String> addressType = new ArrayList<String>();
+                // 设置成sapling地址
+                addressType.add("sapling");
+                paramArray_address.add(addressType);
+
+                _con(ip);
+                JSONObject response_address = _sendRequest("z_getaddressforaccount",paramArray_address,id);
+                /*创建账户成功*/
+
+                JSONObject jsonData = new JSONObject();
+                String address = (String) response_address.getJSONObject("data").get("address");
+                jsonData.put("address", address);
+                jsonData.put("account",account);
+                mapResult.put("status", "ok");
+                mapResult.put("data", jsonData);
+
+            }else {
+                /*建立在新建账户下获取新地址输入数据格式*/
+                JSONArray paramArray_address = new JSONArray();
+                paramArray_address.add(accountNumber);
+
+                List<String> addressType = new ArrayList<String>();
+                addressType.add("sapling");
+                paramArray_address.add(addressType);
+
+                /*建立在新建账户下获取新地址输入数据格式*/
+
+                // 获取反馈数据
+                JSONObject getAddressResponse = _sendRequest("z_getaddressforaccount", paramArray_address,id);
+                JSONObject jsonData = new JSONObject();
+                String address = (String) getAddressResponse.getJSONObject("data").get("address");
+                jsonData.put("address", address);
+                mapResult.put("status", "ok");
+                mapResult.put("data", jsonData);
+            }
+        } catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        }
+        return mapResult;
+    }
+
     /**
      * 查看对应ip的全部地址
      * @param ip：ip地址
