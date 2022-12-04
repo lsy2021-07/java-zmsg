@@ -1,78 +1,49 @@
-package test.blockChain; 
+package test.blockChain;
 
+import blockChain.BlockChainNet;
 import horizen.HorizenNet;
 import org.junit.Test;
-import org.junit.Before; 
-import org.junit.After;
 import zcash.ZcashNet;
 
 import java.util.HashMap;
 
-/** 
-* BlockChainNet Tester. 
-* 
-* @author <Authors name> 
-* @since <pre>11月 1, 2022</pre> 
-* @version 1.0 
-*/ 
-public class BlockChainNetTest { 
+public class BlockChainNetTest {
+    String serviceIp = "8.219.9.193";
+    String id = "horizenNetTest";
+    @Test
+    public void setBlockChainNet() {
+    }
 
-@Before
-public void before() throws Exception { 
-} 
+    @Test
+    public void getAllAddress() {
+       BlockChainNet Net = new ZcashNet();
+//       BlockChainNet Net = new HorizenNet();
+       HashMap result = Net.getAllAddress(serviceIp, id);
+       System.out.println(result);
 
-@After
-public void after() throws Exception { 
-} 
+    }
 
-/** 
-* 
-* Method: blockChainNet(String type) 
-* 
-*/ 
-//@Test
-//public void testBlockChainNet() throws Exception {
-//    BlockChainNet blockChainNet = new BlockChainNet() {
-//        @Override
-//        public HashMap<String, Object> getAllAddress(String ip, String id) {
-//            return null;
-//        }
-//
-//        @Override
-//        public HashMap<String, Object> generateAddress(String ip, String id) {
-//            return null;
-//        }
-//
-//        @Override
-//        public HashMap<String, Object> sendMessage(String ip, String senderAddress, String receiverAddress, String amount, String message, String id) {
-//            return null;
-//        }
-//
-//        @Override
-//        public HashMap<String, Object> getBalance(String ip, String address, String id) {
-//            return null;
-//        }
-//
-//        @Override
-//        public HashMap<String, Object> getSendHistory(String ip, String address, String id) {
-//            return null;
-//        }
-//
-//        @Override
-//        public HashMap<String, Object> getReceiveHistory(String ip, String address, String id) {
-//            return null;
-//        }
-//
-//        @Override
-//        public HashMap<String, Object> getReceiveDetail(String ip, String txid, String id) {
-//            return null;
-//        }
-//    };
-//
-//    String ip = "8.219.9.193";
-//    String id = "111";
-//    System.out.println(blockChainNet);
-//}
+    @Test
+    public void generateAddress() {
+    }
 
+    @Test
+    public void sendMessage() {
+    }
 
-} 
+    @Test
+    public void getBalance() {
+    }
+
+    @Test
+    public void getSendHistory() {
+    }
+
+    @Test
+    public void getReceiveHistory() {
+    }
+
+    @Test
+    public void getReceiveDetail() {
+    }
+}

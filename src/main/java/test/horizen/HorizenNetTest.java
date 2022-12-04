@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.After;
 import horizen.HorizenNet;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 /** 
@@ -28,8 +30,15 @@ public void after() throws Exception {
 } 
 
 @Test
-public void testSendMessage() throws Exception { 
-//TODO: Test goes here... 
+public void testSendMessage() throws Exception {
+    String sender = "zcJvmw9ZmH7CVxavbE2q88qJbipD5WD6G4Xk2DoTjPsf8zmkJtr9MxZkLsyumTyr67DSKad5S4CBWsfUfYjTsYd9t39BXNn";
+    String receiver = "zcT9KxyzFFvCho8PArnDkWCjTN8Y7Mfm3NRQvDLMW1nNTvHfqTRSuNW9TUNYBkan8yEwWfmxg5Qhr89GothKWBgLBXwjBNa";
+    Date date =  new Date();
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    String memo = "Hello Test "+formatter.format(date).toString()+"reply to:zcJvmw9ZmH7CVxavbE2q88qJbipD5WD6G4Xk2DoTjPsf8zmkJtr9MxZkLsyumTyr67DSKad5S4CBWsfUfYjTsYd9t39BXNn";
+    HashMap result = horizenNet.sendMessage(serviceIp,sender,receiver,"0.0002",memo,id);
+    System.out.println(result);
+
 } 
 
 /** 
@@ -39,7 +48,6 @@ public void testSendMessage() throws Exception {
 */ 
 @Test
 public void testGetBalance() throws Exception {
-    String id = "getBalanceTest";
     String address = "zcJvmw9ZmH7CVxavbE2q88qJbipD5WD6G4Xk2DoTjPsf8zmkJtr9MxZkLsyumTyr67DSKad5S4CBWsfUfYjTsYd9t39BXNn";
     String recevierAddress = "zcT9KxyzFFvCho8PArnDkWCjTN8Y7Mfm3NRQvDLMW1nNTvHfqTRSuNW9TUNYBkan8yEwWfmxg5Qhr89GothKWBgLBXwjBNa";
     HashMap result = horizenNet.getBalance(serviceIp,address,id);
@@ -54,7 +62,6 @@ public void testGetBalance() throws Exception {
 @Test
 public void testGetReceiveHistoryForIpAddressId() throws Exception {
     String address = "zcT9KxyzFFvCho8PArnDkWCjTN8Y7Mfm3NRQvDLMW1nNTvHfqTRSuNW9TUNYBkan8yEwWfmxg5Qhr89GothKWBgLBXwjBNa";
-    String id = "testGetReceiveHistory";
     HashMap result =  horizenNet.getReceiveHistory(serviceIp,address,id);
     System.out.println(result);
 } 
@@ -65,8 +72,11 @@ public void testGetReceiveHistoryForIpAddressId() throws Exception {
 * 
 */ 
 @Test
-public void testGetReceiveHistoryForIpAddressMinconfId() throws Exception { 
-//TODO: Test goes here... 
+public void testGetReceiveHistory() throws Exception {
+    String address = "zcT9KxyzFFvCho8PArnDkWCjTN8Y7Mfm3NRQvDLMW1nNTvHfqTRSuNW9TUNYBkan8yEwWfmxg5Qhr89GothKWBgLBXwjBNa";
+    String id = "testGetReceiveHistory";
+    HashMap result =  horizenNet.getReceiveHistory(serviceIp,address,id);
+    System.out.println(result);
 } 
 
 /** 
@@ -75,8 +85,10 @@ public void testGetReceiveHistoryForIpAddressMinconfId() throws Exception {
 * 
 */ 
 @Test
-public void testGenerateAddress() throws Exception { 
-//TODO: Test goes here... 
+public void testGenerateAddress() throws Exception {
+    String id = "GenerateAddressTest";
+    HashMap result = horizenNet.generateAddress(serviceIp, id);
+    System.out.println(result);
 } 
 
 /** 
@@ -85,8 +97,10 @@ public void testGenerateAddress() throws Exception {
 * 
 */ 
 @Test
-public void testGetAllAddress() throws Exception { 
-//TODO: Test goes here... 
+public void testGetAllAddress() throws Exception {
+    String id = "GetAllAddressTest";
+    HashMap result = horizenNet.getAllAddress(serviceIp, id);
+    System.out.println(result);
 } 
 
 /** 
@@ -95,8 +109,11 @@ public void testGetAllAddress() throws Exception {
 * 
 */ 
 @Test
-public void testGetSendHistory() throws Exception { 
-//TODO: Test goes here... 
+public void testGetSendHistory() throws Exception {
+    String address = "zcJvmw9ZmH7CVxavbE2q88qJbipD5WD6G4Xk2DoTjPsf8zmkJtr9MxZkLsyumTyr67DSKad5S4CBWsfUfYjTsYd9t39BXNn";
+    String id = "testGetSendHistory";
+    HashMap result = horizenNet.getSendHistory(serviceIp,address,id);
+    System.out.println(result);
 }
 
 @Test

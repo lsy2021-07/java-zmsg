@@ -24,23 +24,23 @@ public class ZcashNetTest {
         System.out.println("该地址金额数："+zcashNet.getBalance(serviceIp, address, id));
     }
 
+//    @Test
+//    public void checkMessage() {
+//        HashMap result = zcashNet.checkMessage(serviceIp,
+//                "zs1h4mx4nt5m3pdqtwg3x9mu9e7wgpuyj2qjp7jf7l0cnjeh0gcmmcsz5vp79w6s5vraza677fsvdp");
+//        System.out.println(result);
+//    }
     @Test
-    public void checkMessage() {
-        HashMap result = zcashNet.checkMessage(serviceIp,
-                "zs1h4mx4nt5m3pdqtwg3x9mu9e7wgpuyj2qjp7jf7l0cnjeh0gcmmcsz5vp79w6s5vraza677fsvdp");
-        System.out.println(result);
-    }
-    @Test
-    public void GetSendHistory() {
-        HashMap result = zcashNet.GetSendHistory(serviceIp,
-                "zs1h4mx4nt5m3pdqtwg3x9mu9e7wgpuyj2qjp7jf7l0cnjeh0gcmmcsz5vp79w6s5vraza677fsvdp");
+    public void getSendHistory() {
+        HashMap result = zcashNet.getSendHistory(serviceIp,
+                "zs1h4mx4nt5m3pdqtwg3x9mu9e7wgpuyj2qjp7jf7l0cnjeh0gcmmcsz5vp79w6s5vraza677fsvdp",id);
         System.out.println(result);
     }
 
     @Test
-    public void GetReceiveHistory() {
-        HashMap result = zcashNet.GetReceiveHistory(serviceIp,
-                "zs1h4mx4nt5m3pdqtwg3x9mu9e7wgpuyj2qjp7jf7l0cnjeh0gcmmcsz5vp79w6s5vraza677fsvdp");
+    public void getReceiveHistory() {
+        HashMap result = zcashNet.getReceiveHistory(serviceIp,
+                "zs1h4mx4nt5m3pdqtwg3x9mu9e7wgpuyj2qjp7jf7l0cnjeh0gcmmcsz5vp79w6s5vraza677fsvdp",id);
         System.out.println(result);
     }
 
@@ -49,19 +49,24 @@ public class ZcashNetTest {
         HashMap result = zcashNet.getAllAddress(serviceIp, id);
         System.out.println(result);
     }
-
+    @Test
+    public void generateAddress() {
+        Integer acountNum = 1;
+        HashMap result = zcashNet.generateAddress(serviceIp, id, acountNum);
+        System.out.println(result);
+    }
     @Test
     public void getTransactionDetails() {
         String opid = "opid-6f84e135-bdc1-4244-bf6a-4d7509adbe2b";
         String new_opid = "opid-067563f3-5989-4542-b4fb-abf868b8cf80";
-        HashMap result = zcashNet.getTransactionDetails(serviceIp,new_opid);
+        HashMap result = zcashNet.getTransactionDetails(serviceIp,new_opid,id);
         System.out.println(result);
     }
 
     @Test
     public void getReceiveDetails() {
         String txid = "26207398d65f4c2e0cbcda8d6a2c9fc746b2ff26568ed37016aa6b3ca531601d";
-        HashMap result = zcashNet.getReceiveDetail(serviceIp,txid);
+        HashMap result = zcashNet.getReceiveDetail(serviceIp,txid,id);
         System.out.println(result);
     }
 
