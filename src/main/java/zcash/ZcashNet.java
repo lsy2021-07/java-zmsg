@@ -474,7 +474,7 @@ public class ZcashNet extends BlockChainNet {
 
 
     /**  接收历史记录 **/
-    public HashMap<String, Object> getReceiveHistory(String ip, String address, String  id){
+    public HashMap<String, Object> getReceiveHistory(String ip, String address, String id){
         return getReceiveHistory(ip, address, 1,id);
     }
     public HashMap<String, Object> getReceiveHistory(String ip, String address, Integer minconf, String  id){
@@ -570,7 +570,7 @@ public class ZcashNet extends BlockChainNet {
 
 
     /** 交易记录  **/
-    public HashMap<String, Object> getTransactionDetails(String ip, String opid, String id) {
+    public HashMap<String, Object> getSendDetail(String ip, String opid, String id) {
         HashMap mapResult = new HashMap<String,Object>();
         try{
             List<String> list = new ArrayList<>();

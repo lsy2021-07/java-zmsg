@@ -171,8 +171,7 @@ public class BlockChainNet {
     /**
      * 发送消息
      **/
-    public HashMap<String, Object> sendMessage(String ip, String senderAddress,
-                                               String receiverAddress, String amount, String message, String id) {
+    public HashMap<String, Object> sendMessage(String ip, String senderAddress, String receiverAddress, String amount, String message, String id) {
         return null;
     }
 
@@ -195,6 +194,10 @@ public class BlockChainNet {
     }
 
     public HashMap<String, Object> getReceiveDetail(String ip, String txid, String id) {
+        return null;
+    }
+
+    public HashMap<String, Object> getSendDetail(String ip, String opid, String id) {
         return null;
     }
 }
