@@ -21,10 +21,27 @@ import static java.lang.Thread.sleep;
 
 public class ZcashNet extends BlockChainNet {
     String servicePort = "8232";
+//    ZcashJdbc _jdbc;
     public ZcashNet(){
 
     }
-
+    public String _opidTotxid(String ip, String opid, String id) {
+        String txid = null;
+        try{
+            _con(ip,servicePort);
+            /*建立输入数据格式*/
+            JSONArray paramArray = new JSONArray();
+            List<String> list=new ArrayList<>();
+            list.add(opid);
+            paramArray.add(list);
+            JSONObject response = _sendRequest("z_getoperationstatus", paramArray, id);
+            JSONObject jsonData = JSON.parseObject(String.valueOf(response.getJSONArray("data").getJSONObject(0)));
+            txid = (String) JSON.parseObject(String.valueOf(jsonData.get("result"))).get("txid");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return txid;
+    }
 
     /** 发送模块 **/
     /**
@@ -87,6 +104,10 @@ public class ZcashNet extends BlockChainNet {
                         if(status.equals( "success")){
                             mapResult.put("status","ok");
                             jsonData.put("opid",opid.get("data"));
+                            String _txid =_opidTotxid(ip, opid.getString("data"), id);
+
+                            Object[] obj = {_txid, senderAddress, receiverAddress};
+                            ZcashJdbc.insert(obj);
                             mapResult.put("data",jsonData);
                         }else if(status.equals("failed")){
                             mapResult.put("status","error");
