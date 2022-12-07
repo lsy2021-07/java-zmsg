@@ -3,6 +3,7 @@ package zcash;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import zcashTest.ZcashJdbcTest;
 
 import java.io.IOException;
 import java.util.*;
@@ -11,6 +12,8 @@ public class SendHistory extends ZcashProxy {
 //    public SendHistory(){
 //        super();
 //    }
+
+    String servicePort = "8232";
 
     public HashMap<String, Object> GetSendHistory(String ip, String address){
         HashMap mapResult = new HashMap<String,Object>();
@@ -81,4 +84,42 @@ public class SendHistory extends ZcashProxy {
         }
         return mapResult;
     }
+
+    public HashMap<String, Object> getSendHistoryByTxid(String ip, String address, String id){
+        HashMap mapResult = new HashMap<String,Object>();
+        try{
+            ZcashJdbc jdbc = new ZcashJdbc();
+            List<List<String>> txidList = jdbc.checkByAdd1(address);
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i < txidList.size(); i++){
+                List<String> txidWithAddress = txidList.get(i);
+                System.out.println(txidWithAddress);
+
+                _con(ip,servicePort);
+                JSONArray paramArray1 = new JSONArray();
+                paramArray1.add(txidWithAddress.get(0));
+                JSONObject response1 = _sendRequest("z_viewtransaction", paramArray1,id);
+                JSONObject jsonData = response1.getJSONObject("data");
+
+                JSONObject jsonResult = new JSONObject();
+                jsonResult.put("txid",txidWithAddress.get(0));
+                jsonResult.put("sendAddress",txidWithAddress.get(1));
+                jsonResult.put("receiveAddress",txidWithAddress.get(2));
+                jsonResult.put("amount",((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("value"));
+                String memo = (String) ((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("memoStr");
+                jsonResult.put("memo",memo);
+
+                jsonArray.add(jsonResult);
+            }
+            mapResult.put("status","ok");
+            mapResult.put("data",jsonArray);
+        } catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        }
+        return mapResult;
+    }
+
 }

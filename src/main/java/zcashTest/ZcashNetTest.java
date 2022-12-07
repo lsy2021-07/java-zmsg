@@ -14,7 +14,7 @@ public class ZcashNetTest {
         HashMap result_success = zcashNet.sendMessage(serviceIp,
                 "zs1w9sk86zx980lu0e30zm8t9xp3cjadhwnel70qyhtzmawuppjq66kmmmkv409eg90sk4jxdymjwg",
                 "zs1h4mx4nt5m3pdqtwg3x9mu9e7wgpuyj2qjp7jf7l0cnjeh0gcmmcsz5vp79w6s5vraza677fsvdp",
-                "0.003","hello test2 9.17",id);
+                "0.003","hello test 12.7",id);
         System.out.println("成功："+result_success);
     }
 
@@ -34,6 +34,13 @@ public class ZcashNetTest {
     public void getSendHistory() {
         HashMap result = zcashNet.getSendHistory(serviceIp,
                 "zs1h4mx4nt5m3pdqtwg3x9mu9e7wgpuyj2qjp7jf7l0cnjeh0gcmmcsz5vp79w6s5vraza677fsvdp",id);
+        System.out.println(result);
+    }
+
+    @Test
+    public void getSendHistoryByTxid() {
+        HashMap result = zcashNet.getSendHistoryByTxid(serviceIp,
+                "zs1w9sk86zx980lu0e30zm8t9xp3cjadhwnel70qyhtzmawuppjq66kmmmkv409eg90sk4jxdymjwg",id);
         System.out.println(result);
     }
 

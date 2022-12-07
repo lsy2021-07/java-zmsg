@@ -157,6 +157,26 @@ public class BlockChainNet {
         return  simpleDateFormat.format(new Date(new Long(time)));
     }
 
+    /** 判断是否要relpy to **/
+    public List<String>  getReplyTo(String memo_address){
+        List<String> result = new ArrayList<String>();
+        int index = memo_address.lastIndexOf("Reply-To:");
+        String memo="",sendAddress="";
+        if (index==-1){
+            memo = memo_address;
+            result.add(memo);
+            result.add(sendAddress);
+        }
+        else{
+            memo = memo_address.substring(0,index);
+            sendAddress = memo_address.substring(index+9);
+            result.add(memo);
+            result.add(sendAddress);
+        }
+        return result;
+    }
+    /** 判断是否要relpy to **/
+
     /**
      * 地址管理
      **/

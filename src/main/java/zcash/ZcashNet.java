@@ -300,6 +300,50 @@ public class ZcashNet extends BlockChainNet {
         }
         return mapResult;
     }
+
+    /**
+     * 利用数据库返回发送历史数据
+     * @param ip 服务器地址
+     * @param address 发送方地址
+     * @param id 用户标识符
+     * @return 该地址下发送历史
+     */
+    public HashMap<String, Object> getSendHistoryByTxid(String ip, String address, String id){
+        HashMap mapResult = new HashMap<String,Object>();
+        try{
+            ZcashJdbc jdbc = new ZcashJdbc();
+            List<List<String>> txidList = jdbc.checkByAdd1(address);
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i < txidList.size(); i++){
+                List<String> txidWithAddress = txidList.get(i);
+
+                _con(ip,servicePort);
+                JSONArray paramArray1 = new JSONArray();
+                paramArray1.add(txidWithAddress.get(0));
+                JSONObject response1 = _sendRequest("z_viewtransaction", paramArray1,id);
+                JSONObject jsonData = response1.getJSONObject("data");
+
+                JSONObject jsonResult = new JSONObject();
+                jsonResult.put("txid",txidWithAddress.get(0));
+                jsonResult.put("sendAddress",txidWithAddress.get(1));
+                jsonResult.put("receiveAddress",txidWithAddress.get(2));
+                jsonResult.put("amount",((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("value"));
+                String memo = (String) ((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("memoStr");
+                List<String> memo_address = getReplyTo(memo);
+                jsonResult.put("memo",memo_address.get(0));
+
+                jsonArray.add(jsonResult);
+            }
+            mapResult.put("status","ok");
+            mapResult.put("data",jsonArray);
+        } catch (IOException e) {
+            mapResult.put("status","error");
+            JSONObject jsonData = JSON.parseObject(e.getMessage());
+            mapResult.put("data",jsonData);
+            e.printStackTrace();
+        }
+        return mapResult;
+    }
     /**  发送历史记录  **/
 
     /**  地址管理   **/
@@ -517,20 +561,11 @@ public class ZcashNet extends BlockChainNet {
                 String time = unixtimeToData(String.valueOf(jsonObject.get("blocktime")));
                 String memo_address = hex_decode(String.valueOf(jsonObject.get("memo")));
                 String txid = jsonObject.getString("txid");
-                int index = memo_address.lastIndexOf("reply to:");
-                String memo="",sendAddress="";
-
-                if (index==-1){
-                    memo = memo_address;
-                }
-                else{
-                    memo = memo_address.substring(0,index);
-                    sendAddress = memo_address.substring(index+9);
-                }
+                List<String> memoWithAddress = getReplyTo(memo_address);
                 JSONObject _jsonObject = new JSONObject();
                 _jsonObject.put("txid",txid);
-                _jsonObject.put("memo",memo);
-                _jsonObject.put("sendAddress",sendAddress);
+                _jsonObject.put("memo",memoWithAddress.get(0));
+                _jsonObject.put("sendAddress",memoWithAddress.get(1));
                 _jsonObject.put("time",time);
                 resJsonList.add(_jsonObject);
             }
@@ -571,7 +606,8 @@ public class ZcashNet extends BlockChainNet {
             jsonResult.put("sendAddress",((JSONObject)jsonData.getJSONArray("spends").get(0)).get("address"));
             jsonResult.put("receiveAddress",((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("address"));
             jsonResult.put("amount",((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("value"));
-            jsonResult.put("memo",((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("memoStr"));
+            String memo = (String) ((JSONObject)jsonData.getJSONArray("outputs").get(0)).get("memoStr");
+            jsonResult.put("memo",memo);
 
 
             mapResult.put("status","ok");
